@@ -24,9 +24,7 @@ app.post("/submit", (req, res) => {
 
 app.get("/checkstatus", async (req, res) => {
     console.log(jobs[req.query.jobId])
-    //add this line, if you wanna make long polling
-    //long polling works by not responding back to every client request, but keep it intact, and send the final note when the task is done.
-    // while(await checkProgress(req.query.jobId) === false) continue
+    while(await checkProgress(req.query.jobId) === false) continue
     res.send("\n\nJobStatus: " + jobs[req.query.jobId] + "%\n\n")
 })
 
