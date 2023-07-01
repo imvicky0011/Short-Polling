@@ -8,7 +8,7 @@ app.get("/", (req, res) => {
 async function checkProgress(jobId) {
     return new Promise((resolve, reject) => {
         if(jobs[jobId] < 100)
-            this.setTimeout(() => resolve(false), 1000)
+            this.setTimeout(() => resolve(false), 2000)
         else resolve(true)
     })
 }
@@ -24,7 +24,12 @@ app.post("/submit", (req, res) => {
 
 app.get("/checkstatus", async (req, res) => {
     console.log(jobs[req.query.jobId])
-    while(await checkProgress(req.query.jobId) === false) continue
+    //what essentially happens is, the /checkstatus path is invoked, and the while loop asyncly checks if the taks is completed
+    //if it is completed, it is immediately retured with positive response.
+    //if not, then it waits outside the main execution context, and event loop triggers this check condition of while loop after 1 second.
+    while(await checkProgress(req.query.jobId) === false) {
+        console.log("I keep coming every 2 second.")
+    }
     res.send("\n\nJobStatus: " + jobs[req.query.jobId] + "%\n\n")
 })
 
